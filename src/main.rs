@@ -7,18 +7,21 @@ use sdl2::rect::Rect;
 use sdl2::render::{Texture, WindowCanvas};
 use std::time::Duration;
 
-mod game_context;
+mod fluid_cube;
+use fluid_cube::Fluid;
 
-const GRID_X_SIZE: u32 = 40;
-const GRID_Y_SIZE: u32 = 40;
+const ITER: u32 = 10;
+
+const SIZE: u32= 128;
+
+const GRID_X_SIZE: u32 = SIZE;
+const GRID_Y_SIZE: u32 = SIZE;
 const DOT_SIZE_IN_PXS: u32 = 15;
 
 fn render(canvas: &mut WindowCanvas, i: u32) -> Result<(), String> {
     for a in 0..GRID_X_SIZE {
         for b in 0..GRID_Y_SIZE {
-            // canvas.set_draw_color(Color::RGB((a%255) as u8, (b%255) as u8, ((a+b)%255) as u8));
             canvas.set_draw_color(Color::RGB(((i + a) * 5 % 255) as u8, ((i + b) * 5 % 255) as u8, 50));
-            // canvas.set_draw_color(Color::RGB(100,200,0));
             let current_frame = Rect::new(
                 (a * DOT_SIZE_IN_PXS) as i32,
                 (b * DOT_SIZE_IN_PXS) as i32,
@@ -58,6 +61,8 @@ fn main() -> Result<(), String> {
 
     let mut event_pump = sdl_context.event_pump()?;
     let mut i :u32= 0;
+
+    let fluid = Fluid::new(SIZE, 0.1, 0.0, 0.0);
 
     'running: loop {
         for event in event_pump.poll_iter() {
